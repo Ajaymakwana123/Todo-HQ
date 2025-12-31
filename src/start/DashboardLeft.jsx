@@ -16,7 +16,7 @@ function DashboardLeft({ menuItems, active, setActive }) {
         <div>
             <div className='w-full text-center bg-[#F5F8FF] h-screen relative'>
                 <img className='ml-auto mr-auto relative w-20' src="/images/iclogo.png" alt="" />
-                <div className='bg-[#FF6767] -mt-10 pt-13 h-full text-center rounded-r-xl shadow-md w-full text-white'>
+                <div className='bg-[#FF6767] -mt-10 pt-13 h-screen text-center rounded-r-xl shadow-md w-full text-white'>
                     <h2>Sachin Vadhel</h2>
                     <h6>sachinvadhel@gmail.com</h6>
                     <nav className="flex flex-col px-7 py-2">
@@ -50,8 +50,6 @@ function DashboardLeft({ menuItems, active, setActive }) {
                                                 "opacity-100"}`} />
                             <span className="ml-1 font-medium">Log Out</span>
                         </button>
-
-                        <h1 className='mt-10'>Hwll</h1>
                     </nav>
                 </div>
             </div>
