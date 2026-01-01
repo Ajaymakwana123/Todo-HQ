@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { LuCalendarDays } from 'react-icons/lu'
 import { MdDelete } from "react-icons/md";
 import { RiEditBoxFill } from "react-icons/ri";
@@ -6,10 +6,8 @@ import { IoInformation } from "react-icons/io5";
 import { FaInfo } from "react-icons/fa";
 
 
+function Fullscreenview({ selectedTask, setSelectedTask, onDelete, onEdit }) {
 
-
-
-function Fullscreenview({ selectedTask, setSelectedTask }) {
     return (
         <div className='w-full md:h-[62vh] lg:h-[65vh] sm:h-[60vh] h-[66vh] overflow-y-auto relative'>
 
@@ -59,11 +57,14 @@ function Fullscreenview({ selectedTask, setSelectedTask }) {
             </div>
 
             <div className='flex absolute gap-2 right-0 bottom-0'>
-
-                <div className=' bg-[#FF6767] rounded-lg px-1.5 py-1'>
+                <div
+                    onClick={() => onDelete(selectedTask.id)}
+                    className=' bg-[#FF6767] rounded-lg px-1.5 py-1'>
                     <MdDelete className='text-white w-5.5 h-6' />
                 </div>
-                <div className=' bg-[#FF6767] rounded-lg px-1.5 py-1'>
+                <div
+                    onClick={onEdit}
+                    className=' bg-[#FF6767] rounded-lg px-1.5 py-1'>
                     <RiEditBoxFill className='text-white w-5.5 h-6' />
                 </div>
                 <div className=' bg-[#FF6767] rounded-lg px-1.5 py-1'>

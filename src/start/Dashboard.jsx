@@ -19,11 +19,19 @@ function Dashboard() {
     const [percents, setPercents] = useState(40);
     const [percents2, setPercents2] = useState(84);
     const [percents3, setPercents3] = useState(40);
-
     const [showModal, setShowModal] = useState(false);
     const [tasks, setTasks] = useState([]);
     const [selectedTask, setSelectedTask] = useState(null);
+    const [isEdit, setIsEdit] = useState(false);
 
+    const updateTask = (updatedTask) => {
+        setTasks(prev =>
+            prev.map(task =>
+                task.id === updatedTask.id ? updatedTask : task
+            )
+        );
+        setSelectedTask(updatedTask);
+    };
 
     useEffect(() => {
         const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -36,6 +44,12 @@ function Dashboard() {
         localStorage.setItem("tasks", JSON.stringify(updated));
         setShowModal(false);
     };
+
+    const handleDeleteTask = (taskId) => {
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+        setSelectedTask(null); // back jane ke liye
+    };
+
 
     useEffect(() => {
         const user = auth.currentUser;
@@ -105,7 +119,6 @@ function Dashboard() {
                     <DashboardLeft className="w-[22%] text-center bg-[#F5F8FF] h-screen relative"
                         menuItems={menuItems} active={active} setActive={setActive} />
                     {/* Center Part */}
-
                     <div className='w-[78%] p-4'>
                         <div className='flex mt-4 px-3 justify-between'>
                             <h1 className='text-[2.2vw] font-medium text-black'>Welcome Back, {userName} 👋</h1>
@@ -270,16 +283,30 @@ function Dashboard() {
                                     </div>
                                 </div>
                                 {showModal && (
-                                    <AddTaskModal onClose={() => setShowModal(false)} onAddTask={addTask} />
+                                    <AddTaskModal
+                                        onClose={() => {
+                                            setShowModal(false);
+                                            setIsEdit(false);
+                                        }}
+                                        onAddTask={addTask}
+                                        editTask={isEdit ? selectedTask : null}
+                                        onUpdateTask={updateTask}
+                                    />
                                 )}
+
                             </div>
                         ) : (
                             /* ================= FULL TASK VIEW ================= */
                             <div className="border-[#a1a3ab9d] p-4 rounded mx-3 my-5 w-full h-fu border-[1.8px] bg-[#F5F8FF]">
-                                <Fullscreenview selectedTask={selectedTask} setSelectedTask={setSelectedTask} />
+                                <Fullscreenview selectedTask={selectedTask}
+                                    setSelectedTask={setSelectedTask}
+                                    onDelete={handleDeleteTask}
+                                    onEdit={() => {
+                                        setIsEdit(true);
+                                        setShowModal(true);
+                                    }} />
                             </div>
                         )}
-
                     </div>
                 </div>
             </div>

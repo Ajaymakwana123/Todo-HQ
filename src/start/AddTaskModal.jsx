@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
-export default function AddTaskModal({ onClose, onAddTask }) {
+import React, { useEffect, useState } from 'react';
+export default function AddTaskModal({ onClose,
+    onAddTask,
+    editTask,
+    onUpdateTask }) {
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
     const [priority, setPriority] = useState("");
@@ -13,16 +16,40 @@ export default function AddTaskModal({ onClose, onAddTask }) {
         if (file) reader.readAsDataURL(file);
     };
 
+    useEffect(() => {
+        if (editTask) {
+            setTitle(editTask.title);
+            setDate(editTask.date);
+            setPriority(editTask.priority);
+            setDescription(editTask.description);
+            setImage(editTask.image);
+        }
+    }, [editTask]);
+
+
     const handleSubmit = () => {
-        onClose(true);
         if (!title) return alert("Title required");
-        onAddTask({
-            title,
-            date,
-            priority,
-            description,
-            image,
-        });
+
+        if (editTask) {
+            onUpdateTask({
+                ...editTask,
+                title,
+                date,
+                priority,
+                description,
+                image,
+            });
+        } else {
+            onAddTask({
+                id: Date.now(),
+                title,
+                date,
+                priority,
+                description,
+                image,
+            });
+        }
+        onClose();
     };
 
     return (
@@ -33,7 +60,10 @@ export default function AddTaskModal({ onClose, onAddTask }) {
                 <div className="bg-white w-full mx-30 p-4 rounded-sm shadow-xl">
                     {/* HEADER */}
                     <div className="flex justify-between items-center px-5 py-3">
-                        <h2 className="font-semibold text-md">Add New Task</h2>
+                        <h2 className="font-semibold text-md">
+                            {editTask ? "Edit Task" : "Add New Task"}
+                        </h2>
+
                         <button onClick={onClose} className="font-semibold">
                             Go Back
                         </button>
@@ -95,7 +125,7 @@ export default function AddTaskModal({ onClose, onAddTask }) {
                         <button
                             onClick={handleSubmit}
                             className="bg-[#F24E1E] text-white px-6 py-2 rounded">
-                            Done
+                            {editTask ? "Save Changes" : "Done"}
                         </button>
                     </div>
                 </div>
