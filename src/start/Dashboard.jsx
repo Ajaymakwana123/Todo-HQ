@@ -10,6 +10,7 @@ import 'react-circular-progressbar/dist/styles.css';
 import { CiMenuKebab } from "react-icons/ci";
 import DashboardLeft from './DashboardLeft';
 import Fullscreenview from './Fullscreenview';
+import VitalTaskView from './VitalTaskView';
 
 
 function Dashboard() {
@@ -119,199 +120,210 @@ function Dashboard() {
                     <DashboardLeft className="w-[22%] text-center bg-[#F5F8FF] h-screen relative"
                         menuItems={menuItems} active={active} setActive={setActive} />
                     {/* Center Part */}
-                    <div className='w-[78%] p-4'>
-                        <div className='flex mt-4 px-3 justify-between'>
-                            <h1 className='text-[2.2vw] font-medium text-black'>Welcome Back, {userName} 👋</h1>
-                            <div className='flex border-[1.8px] py-1.5 px-4 items-center border-[#FF6767] rounded-lg cursor-pointer'>
-                                <img className='w-5 h-3 mr-1.5' src="/images/invite.png" alt="" />
-                                <h3 className='text-[#FF6767]'>Invite</h3>
+                    {active === "vital" ? (
+                        <VitalTaskView
+                            tasks={tasks}
+                            setSelectedTask={setSelectedTask}
+                        />
+                    ) : (
+                        <div className='w-[78%] p-4'>
+                            <div className='flex mt-4 px-3 justify-between'>
+                                <h1 className='text-[2.2vw] font-medium text-black'>Welcome Back, {userName} 👋</h1>
+                                <div className='flex border-[1.8px] py-1.5 px-4 items-center border-[#FF6767] rounded-lg cursor-pointer'>
+                                    <img className='w-5 h-3 mr-1.5' src="/images/invite.png" alt="" />
+                                    <h3 className='text-[#FF6767]'>Invite</h3>
+                                </div>
                             </div>
-                        </div>
-                        {!selectedTask ? (
-                            <div className='border-[#a1a3ab9d] p-4 flex rounded mx-3 my-5 w-full h-full border-[1.8px]'>
-                                <div className='w-[54%] border-[#a1a3ab9d] bg-[#F5F8FF] p-4 rounded-xl border-[1.8px] h-full flex flex-col'>
-                                    <div className='flex justify-between'>
-                                        <div className='flex items-center'>
-                                            <img src="/images/todo1.png" alt="" />
-                                            <h1 className='ml-1 font-medium text-[#FF6767]'>To-Do</h1>
+                            {!selectedTask ? (
+                                <div className='border-[#a1a3ab9d] p-4 flex rounded mx-3 my-5 w-full h-full border-[1.8px]'>
+                                    <div className='w-[54%] border-[#a1a3ab9d] bg-[#F5F8FF] p-4 rounded-xl border-[1.8px] h-full flex flex-col'>
+                                        <div className='flex justify-between'>
+                                            <div className='flex items-center'>
+                                                <img src="/images/todo1.png" alt="" />
+                                                <h1 className='ml-1 font-medium text-[#FF6767]'>To-Do</h1>
+                                            </div>
+                                            <div onClick={() => setShowModal(true)} className='cursor-pointer flex items-center'>
+                                                <FaPlus className='text-[#F24E1E]' />
+                                                <h3 className='text-[#A1A3AB]'>Add task</h3>
+                                            </div>
                                         </div>
-                                        <div onClick={() => setShowModal(true)} className='cursor-pointer flex items-center'>
-                                            <FaPlus className='text-[#F24E1E]' />
-                                            <h3 className='text-[#A1A3AB]'>Add task</h3>
+
+                                        <div className='mt-1 flex'>
+                                            <h2 className='text-black'>20 June</h2>
+                                            <h2 className='text-[#A1A3AB] ml-2'>•Today</h2>
                                         </div>
-                                    </div>
 
-                                    <div className='mt-1 flex'>
-                                        <h2 className='text-black'>20 June</h2>
-                                        <h2 className='text-[#A1A3AB] ml-2'>•Today</h2>
-                                    </div>
+                                        <div className="mt-4 flex flex-col gap-4 overflow-y-auto h-[54vh]">
+                                            {tasks.map((task, index) => (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => setSelectedTask(task)}
+                                                    className="w-full flex flex-col p-2 border-[#A1A3AB] border-[2px] rounded-xl">
+                                                    <div className={`ml-1 rounded-full border-2 mt-1.5 ${task.priority === "Extreme"
+                                                        ? "border-[#F21E1E]"
+                                                        : task.priority === "Moderate"
+                                                            ? "border-[#42ADE2]"
+                                                            : "border-[#05A301]"
+                                                        } h-3 w-3`} />
 
-                                    <div className="mt-4 flex flex-col gap-4 overflow-y-auto h-[54vh]">
-                                        {tasks.map((task, index) => (
-                                            <div
-                                                key={index}
-                                                onClick={() => setSelectedTask(task)}
-                                                className="w-full flex flex-col p-2 border-[#A1A3AB] border-[2px] rounded-xl">
-                                                <div className="ml-1 rounded-full border-2 mt-1.5 border-[#05A301] h-3 w-3" />
-
-                                                <div className="flex flex-row gap-2 ml-7 -mt-4.5 justify-between">
-                                                    <div className='w-[80%] flex justify-between'>
-                                                        <div>
-                                                            <h1 className="font-semibold text-md">{task.title}</h1>
-                                                            <p className="text-sm mt-2 max-h-30 text-[#747474] w-[80%]">
-                                                                {task.description}
-                                                            </p>
+                                                    <div className="flex flex-row gap-2 ml-7 -mt-4.5 justify-between">
+                                                        <div className='w-[80%] flex justify-between'>
+                                                            <div>
+                                                                <h1 className="font-semibold text-md">{task.title}</h1>
+                                                                <p className="text-sm mt-2 max-h-30 text-[#747474] w-[80%]">
+                                                                    {task.description}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="w-[20%] flex me-2 flex-col items-end">
+                                                            <CiMenuKebab className="rotate-90" />
+                                                            {task.image && (
+                                                                <img
+                                                                    src={task.image}
+                                                                    alt=""
+                                                                    className="rounded-sm w-20 h-20"
+                                                                />
+                                                            )}
                                                         </div>
                                                     </div>
-                                                    <div className="w-[20%] flex me-2 flex-col items-end">
-                                                        <CiMenuKebab className="rotate-90" />
-                                                        {task.image && (
-                                                            <img
-                                                                src={task.image}
-                                                                alt=""
-                                                                className="rounded-sm w-20 h-20"
-                                                            />
-                                                        )}
+                                                    <div className="flex justify-center gap-5 mt-2 text-[.9vw] w-full text-[#747474]">
+                                                        <p >
+                                                            Priority:{" "}
+                                                            <span
+                                                                className={`font-medium ${task.priority === "Extreme"
+                                                                    ? "text-[#F21E1E]"
+                                                                    : task.priority === "Moderate"
+                                                                        ? "text-[#42ADE2]"
+                                                                        : "text-[#05A301]"
+                                                                    }`}
+                                                            >
+                                                                {task.priority}
+                                                            </span>
+
+                                                        </p>
+                                                        <p>Status: Not Started</p>
+                                                        <p>Created on: {task.date}</p>
                                                     </div>
                                                 </div>
-                                                <div className="flex justify-center gap-5 mt-2 text-[.9vw] w-full text-[#747474]">
-                                                    <p >
-                                                        Priority:{" "}
-                                                        <span
-                                                            className={`font-medium ${task.priority === "Extreme"
-                                                                ? "text-[#F21E1E]"
-                                                                : task.priority === "Moderate"
-                                                                    ? "text-[#42ADE2]"
-                                                                    : "text-[#05A301]"
-                                                                }`}
-                                                        >
-                                                            {task.priority}
-                                                        </span>
+                                            ))}
+                                        </div>
+                                    </div>
 
-                                                    </p>
-                                                    <p>Status: Not Started</p>
-                                                    <p>Created on: {task.date}</p>
+                                    <div className='ml-4 w-[46%] h-fit'>
+                                        {/* Task Status */}
+                                        <div className='drop-shadow-sm px-4 py-2 rounded-xl bg-[rgb(245,248,255)]'>
+                                            <div className='flex items-center'>
+                                                <img src="/images/todo2.png" alt="" />
+                                                <h1 className='ml-1 font-medium text-[#FF6767]'>Task Status</h1>
+                                            </div>
+                                            <div className='flex px-3 items-center py-2 gap-10'>
+                                                <div>
+                                                    <CircularProgressbar className='h-26 mt-2'
+                                                        styles={buildStyles(
+                                                            {
+                                                                pathColor: `#05A301`,
+                                                                textColor: '#000',
+                                                                textSize: '1.5vw',
+                                                                trailColor: '#D9D9D9',
+                                                                backgroundColor: '#3e98c7',
+                                                                strokeLinecap: 'butt',
+                                                                transition: 'stroke-dashoffset 0.5s ease 0s',
+                                                                transform: 'rotate(0.25turn)',
+                                                            }
+                                                        )} value={percents} text={`${percents}%`} />
+                                                    <h2 className='mt-2 font-medium text-sm tracking-tight'>🟢 Completed</h2>
+                                                </div>
+
+                                                <div>
+                                                    <CircularProgressbar className='h-26 mt-2'
+                                                        styles={buildStyles(
+                                                            {
+                                                                pathColor: `#0225FF`,
+                                                                textColor: '#000',
+                                                                textSize: '1.5vw',
+                                                                trailColor: '#D9D9D9',
+                                                                backgroundColor: '#3e98c7',
+                                                                strokeLinecap: 'butt',
+                                                                transition: 'stroke-dashoffset 0.5s ease 0s',
+                                                                transform: 'rotate(0.25turn)',
+                                                            }
+                                                        )} value={percents2} text={`${percents2}%`} />
+                                                    <h2 className='mt-2 font-medium text-sm tracking-tight'>🔵 In Progress</h2>
+                                                </div>
+
+                                                <div>
+                                                    <CircularProgressbar className='h-26 mt-2'
+                                                        styles={buildStyles(
+                                                            {
+                                                                pathColor: `#F21E1E`,
+                                                                textColor: '#000',
+                                                                textSize: '1.5vw',
+                                                                trailColor: '#D9D9D9',
+                                                                backgroundColor: '#3e98c7',
+                                                                strokeLinecap: 'butt',
+                                                                transition: 'stroke-dashoffset 0.5s ease 0s',
+                                                                transform: 'rotate(0.25turn)',
+                                                            }
+                                                        )} value={percents3} text={`${percents3}%`} />
+                                                    <h2 className='mt-2 font-medium text-sm tracking-tight'>🔴 Not Started</h2>
                                                 </div>
                                             </div>
-                                        ))}
+                                        </div>
+
+                                        {/* Completed Task */}
+                                        <div className='mt-3 drop-shadow-sm px-4 py-2 rounded-xl bg-[#F5F8FF]'>
+                                            <div className='flex items-center'>
+                                                <img src="/images/todo3.png" alt="" />
+                                                <h1 className='ml-2 font-medium text-[#FF6767]'>Completed Task</h1>
+                                            </div>
+
+                                            <div className='flex flex-col-reverse mt-3 gap-3 px-5 py-3'>
+                                                <div className='w-fit max-w-fit flex p-2 justify-center border-[#A1A3AB] border-[2px] rounded-xl'>
+                                                    <div className='ml-1 rounded-full border-2 mt-1 border-[#05A301] h-3.5 w-4.5' />
+                                                    <div className='ml-2.5 flex flex-col gap-1.5'>
+                                                        <h1 className='font-semibold'>Walk the dog</h1>
+                                                        <p className='text-[.9vw] text-[#747474] w-[80%]'>Take the dog to the park and bring treats as well.</p>
+                                                        <p className='text-[.9vw]'>Status: <span className='text-[#05A301]'>Completed</span></p>
+                                                        <p className='text-sm text-[#747474]'>Completed 2 days ago.</p>
+                                                    </div>
+                                                    <div className='mr-5 flex flex-col items-end'>
+                                                        <CiMenuKebab className='rotate-90 mb-2' />
+                                                        <img className='rounded-sm w-32 h-24' src="/images/demo.png" alt="" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+                                    {showModal && (
+                                        <AddTaskModal
+                                            onClose={() => {
+                                                setShowModal(false);
+                                                setIsEdit(false);
+                                            }}
+                                            onAddTask={addTask}
+                                            editTask={isEdit ? selectedTask : null}
+                                            onUpdateTask={updateTask}
+                                        />
+                                    )}
+
                                 </div>
-
-                                <div className='ml-4 w-[46%] h-fit'>
-                                    {/* Task Status */}
-                                    <div className='drop-shadow-sm px-4 py-2 rounded-xl bg-[rgb(245,248,255)]'>
-                                        <div className='flex items-center'>
-                                            <img src="/images/todo2.png" alt="" />
-                                            <h1 className='ml-1 font-medium text-[#FF6767]'>Task Status</h1>
-                                        </div>
-                                        <div className='flex px-3 items-center py-2 gap-10'>
-                                            <div>
-                                                <CircularProgressbar className='h-26 mt-2'
-                                                    styles={buildStyles(
-                                                        {
-                                                            pathColor: `#05A301`,
-                                                            textColor: '#000',
-                                                            textSize: '1.5vw',
-                                                            trailColor: '#D9D9D9',
-                                                            backgroundColor: '#3e98c7',
-                                                            strokeLinecap: 'butt',
-                                                            transition: 'stroke-dashoffset 0.5s ease 0s',
-                                                            transform: 'rotate(0.25turn)',
-                                                        }
-                                                    )} value={percents} text={`${percents}%`} />
-                                                <h2 className='mt-2 font-medium text-sm tracking-tight'>🟢 Completed</h2>
-                                            </div>
-
-                                            <div>
-                                                <CircularProgressbar className='h-26 mt-2'
-                                                    styles={buildStyles(
-                                                        {
-                                                            pathColor: `#0225FF`,
-                                                            textColor: '#000',
-                                                            textSize: '1.5vw',
-                                                            trailColor: '#D9D9D9',
-                                                            backgroundColor: '#3e98c7',
-                                                            strokeLinecap: 'butt',
-                                                            transition: 'stroke-dashoffset 0.5s ease 0s',
-                                                            transform: 'rotate(0.25turn)',
-                                                        }
-                                                    )} value={percents2} text={`${percents2}%`} />
-                                                <h2 className='mt-2 font-medium text-sm tracking-tight'>🔵 In Progress</h2>
-                                            </div>
-
-                                            <div>
-                                                <CircularProgressbar className='h-26 mt-2'
-                                                    styles={buildStyles(
-                                                        {
-                                                            pathColor: `#F21E1E`,
-                                                            textColor: '#000',
-                                                            textSize: '1.5vw',
-                                                            trailColor: '#D9D9D9',
-                                                            backgroundColor: '#3e98c7',
-                                                            strokeLinecap: 'butt',
-                                                            transition: 'stroke-dashoffset 0.5s ease 0s',
-                                                            transform: 'rotate(0.25turn)',
-                                                        }
-                                                    )} value={percents3} text={`${percents3}%`} />
-                                                <h2 className='mt-2 font-medium text-sm tracking-tight'>🔴 Not Started</h2>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    {/* Completed Task */}
-                                    <div className='mt-3 drop-shadow-sm px-4 py-2 rounded-xl bg-[#F5F8FF]'>
-                                        <div className='flex items-center'>
-                                            <img src="/images/todo3.png" alt="" />
-                                            <h1 className='ml-2 font-medium text-[#FF6767]'>Completed Task</h1>
-                                        </div>
-
-                                        <div className='flex flex-col-reverse mt-3 gap-3 px-5 py-3'>
-                                            <div className='w-fit max-w-fit flex p-2 justify-center border-[#A1A3AB] border-[2px] rounded-xl'>
-                                                <div className='ml-1 rounded-full border-2 mt-1 border-[#05A301] h-3.5 w-4.5' />
-                                                <div className='ml-2.5 flex flex-col gap-1.5'>
-                                                    <h1 className='font-semibold'>Walk the dog</h1>
-                                                    <p className='text-[.9vw] text-[#747474] w-[80%]'>Take the dog to the park and bring treats as well.</p>
-                                                    <p className='text-[.9vw]'>Status: <span className='text-[#05A301]'>Completed</span></p>
-                                                    <p className='text-sm text-[#747474]'>Completed 2 days ago.</p>
-                                                </div>
-                                                <div className='mr-5 flex flex-col items-end'>
-                                                    <CiMenuKebab className='rotate-90 mb-2' />
-                                                    <img className='rounded-sm w-32 h-24' src="/images/demo.png" alt="" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                            ) : (
+                                /* ================= FULL TASK VIEW ================= */
+                                <div className="border-[#a1a3ab9d] p-4 rounded mx-3 my-5 w-full h-fu border-[1.8px] bg-[#F5F8FF]">
+                                    <Fullscreenview selectedTask={selectedTask}
+                                        setSelectedTask={setSelectedTask}
+                                        onDelete={handleDeleteTask}
+                                        onEdit={() => {
+                                            setIsEdit(true);
+                                            setShowModal(true);
+                                        }} />
                                 </div>
-                                {showModal && (
-                                    <AddTaskModal
-                                        onClose={() => {
-                                            setShowModal(false);
-                                            setIsEdit(false);
-                                        }}
-                                        onAddTask={addTask}
-                                        editTask={isEdit ? selectedTask : null}
-                                        onUpdateTask={updateTask}
-                                    />
-                                )}
-
-                            </div>
-                        ) : (
-                            /* ================= FULL TASK VIEW ================= */
-                            <div className="border-[#a1a3ab9d] p-4 rounded mx-3 my-5 w-full h-fu border-[1.8px] bg-[#F5F8FF]">
-                                <Fullscreenview selectedTask={selectedTask}
-                                    setSelectedTask={setSelectedTask}
-                                    onDelete={handleDeleteTask}
-                                    onEdit={() => {
-                                        setIsEdit(true);
-                                        setShowModal(true);
-                                    }} />
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
-
-        </div >
+        </div>
     )
 }
 
