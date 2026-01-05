@@ -10,7 +10,8 @@ import 'react-circular-progressbar/dist/styles.css';
 import { CiMenuKebab } from "react-icons/ci";
 import DashboardLeft from './DashboardLeft';
 import Fullscreenview from './Fullscreenview';
-import VitalTaskView from './VitalTaskView';
+import VitalTaskView from './TaskMasterDetailView';
+import TaskMasterDetailView from './TaskMasterDetailView';
 
 
 function Dashboard() {
@@ -25,19 +26,34 @@ function Dashboard() {
     const [selectedTask, setSelectedTask] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
 
+    const vitalTasks = tasks.filter(
+        t => t.priority?.toLowerCase() === "extreme"
+    );
+
     const updateTask = (updatedTask) => {
-        setTasks(prev =>
-            prev.map(task =>
-                task.id === updatedTask.id ? updatedTask : task
-            )
+        const updatedTasks = tasks.map(task =>
+            task.id === updatedTask.id ? updatedTask : task
         );
+
+        setTasks(updatedTasks);
+        localStorage.setItem("tasks", JSON.stringify(updatedTasks));
         setSelectedTask(updatedTask);
     };
+
 
     useEffect(() => {
         const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
         setTasks(savedTasks);
     }, []);
+
+    const [activeTask, setActiveTask] = useState(null);
+
+    useEffect(() => {
+        if (tasks?.length) {
+            setActiveTask(tasks[0]);
+        }
+    }, [tasks]);
+
 
     const addTask = (task) => {
         const updated = [...tasks, task];
@@ -47,8 +63,12 @@ function Dashboard() {
     };
 
     const handleDeleteTask = (taskId) => {
-        setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
-        setSelectedTask(null); // back jane ke liye
+        const updatedTasks = tasks.filter(task => task.id !== taskId);
+
+        setTasks(updatedTasks);
+        localStorage.setItem("tasks", JSON.stringify(updatedTasks));
+
+        setSelectedTask(null);
     };
 
 
@@ -82,7 +102,8 @@ function Dashboard() {
 
     return (
         <div>
-            <div className='bg-[#F5F8FF] overflow-hidden w-full min-h-screen h-[100vh] relative'>
+            <div className='bg-[#F5F8FF] overflow-hidden w-full h-[100vh] relative'>
+                {/* Top Bar */}
                 <div className='bg-[#F8F8F8] py-4 px-7 items-center justify-between flex shadow-[10px] shadow-amber-50'>
                     <h1 className='text-2xl font-semibold text-[#FF6767]'>Dash<span className='text-black'>board</span></h1>
                     <div className="bg-[#F5F8FF] w-full max-w-2xl mx-auto">
@@ -114,19 +135,39 @@ function Dashboard() {
                         </div>
                     </div>
                 </div>
-
                 <div className='flex'>
                     {/* LEft Menu */}
                     <DashboardLeft className="w-[22%] text-center bg-[#F5F8FF] h-screen relative"
                         menuItems={menuItems} active={active} setActive={setActive} />
                     {/* Center Part */}
-                    {active === "vital" ? (
-                        <VitalTaskView
+                    {active === "vital" && (
+                        <TaskMasterDetailView
+                            title="Vital Tasks"
                             tasks={tasks}
-                            setSelectedTask={setSelectedTask}
+                            onEdit={(task) => {
+                                setSelectedTask(task);
+                                setIsEdit(true);
+                                setShowModal(true);
+                            }}
+                            onDelete={handleDeleteTask}
                         />
-                    ) : (
-                        <div className='w-[78%] p-4'>
+                    )}
+
+                    {active === "mytask" && (
+                        <TaskMasterDetailView
+                            title="My Tasks"
+                            tasks={tasks}
+                            onEdit={(task) => {
+                                setSelectedTask(task);
+                                setIsEdit(true);
+                                setShowModal(true);
+                            }}
+                            onDelete={handleDeleteTask}
+                        />
+                    )}
+                    {active !== "vital" && active !== "mytask" && (
+                        /* 🔥 TUMHARA EXISTING DASHBOARD CODE – AS IT IS */
+                        <div className='w-[78%] p-3'>
                             <div className='flex mt-4 px-3 justify-between'>
                                 <h1 className='text-[2.2vw] font-medium text-black'>Welcome Back, {userName} 👋</h1>
                                 <div className='flex border-[1.8px] py-1.5 px-4 items-center border-[#FF6767] rounded-lg cursor-pointer'>
@@ -135,7 +176,7 @@ function Dashboard() {
                                 </div>
                             </div>
                             {!selectedTask ? (
-                                <div className='border-[#a1a3ab9d] p-4 flex rounded mx-3 my-5 w-full h-full border-[1.8px]'>
+                                <div className='border-[#a1a3ab9d] p-4 flex rounded mx-3 my-5 w-full h-[33vw] border-[1.8px]'>
                                     <div className='w-[54%] border-[#a1a3ab9d] bg-[#F5F8FF] p-4 rounded-xl border-[1.8px] h-full flex flex-col'>
                                         <div className='flex justify-between'>
                                             <div className='flex items-center'>
@@ -309,8 +350,9 @@ function Dashboard() {
                                 </div>
                             ) : (
                                 /* ================= FULL TASK VIEW ================= */
-                                <div className="border-[#a1a3ab9d] p-4 rounded mx-3 my-5 w-full h-fu border-[1.8px] bg-[#F5F8FF]">
-                                    <Fullscreenview selectedTask={selectedTask}
+                                <div className="border-[#a1a3ab9d] p-4 rounded mx-3 my-5 w-full border-[1.8px] bg-[#F5F8FF]">
+                                    <Fullscreenview
+                                        selectedTask={selectedTask}
                                         setSelectedTask={setSelectedTask}
                                         onDelete={handleDeleteTask}
                                         onEdit={() => {

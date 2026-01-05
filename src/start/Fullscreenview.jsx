@@ -9,15 +9,14 @@ import { FaInfo } from "react-icons/fa";
 function Fullscreenview({ selectedTask, setSelectedTask, onDelete, onEdit }) {
 
     return (
-        <div className='w-full md:h-[62vh] lg:h-[65vh] sm:h-[60vh] h-[66vh] overflow-y-auto relative'>
-
+        <div className='md:h-[62vh] lg:h-[65vh] sm:h-[60vh] h-[66vh] overflow-y-auto relative'>
             <div className='flex justify-between px-2'>
                 <div className='flex'>
                     {selectedTask.image && (
                         <img
                             src={selectedTask.image}
                             alt=""
-                            className="border-[#a1a3ab9d] border-1 rounded-lg w-48 h-56"
+                            className="border-[#a1a3ab9d] border rounded-lg w-48 h-56"
                         />
                     )}
                     <div className='ml-4 mt-1'>
