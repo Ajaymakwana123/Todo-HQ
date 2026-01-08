@@ -166,7 +166,6 @@ function Dashboard() {
                         />
                     )}
                     {active !== "vital" && active !== "mytask" && (
-                        /* 🔥 TUMHARA EXISTING DASHBOARD CODE – AS IT IS */
                         <div className='w-[78%] p-3'>
                             <div className='flex mt-4 px-3 justify-between'>
                                 <h1 className='text-[2.2vw] font-medium text-black'>Welcome Back, {userName} 👋</h1>
@@ -346,7 +345,6 @@ function Dashboard() {
                                             onUpdateTask={updateTask}
                                         />
                                     )}
-
                                 </div>
                             ) : (
                                 /* ================= FULL TASK VIEW ================= */
@@ -355,10 +353,7 @@ function Dashboard() {
                                         selectedTask={selectedTask}
                                         setSelectedTask={setSelectedTask}
                                         onDelete={handleDeleteTask}
-                                        onEdit={() => {
-                                            setIsEdit(true);
-                                            setShowModal(true);
-                                        }} />
+                                    />
                                 </div>
                             )}
                         </div>

@@ -6,8 +6,7 @@ import { IoInformation } from "react-icons/io5";
 import { FaInfo } from "react-icons/fa";
 
 
-function Fullscreenview({ selectedTask, setSelectedTask, onDelete, onEdit }) {
-
+function Fullscreenview({ selectedTask, setSelectedTask, onDelete }) {
     return (
         <div className='md:h-[62vh] lg:h-[65vh] sm:h-[60vh] h-[66vh] overflow-y-auto relative'>
             <div className='flex justify-between px-2'>
@@ -62,7 +61,6 @@ function Fullscreenview({ selectedTask, setSelectedTask, onDelete, onEdit }) {
                     <MdDelete className='text-white w-5.5 h-6' />
                 </div>
                 <div
-                    onClick={onEdit}
                     className=' bg-[#FF6767] rounded-lg px-1.5 py-1'>
                     <RiEditBoxFill className='text-white w-5.5 h-6' />
                 </div>
