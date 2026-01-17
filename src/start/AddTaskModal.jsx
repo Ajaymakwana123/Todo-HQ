@@ -3,6 +3,7 @@ export default function AddTaskModal({ onClose,
     onAddTask,
     editTask,
     onUpdateTask }) {
+        
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
     const [priority, setPriority] = useState("");

@@ -165,6 +165,9 @@ function Dashboard() {
                             onDelete={handleDeleteTask}
                         />
                     )}
+                    {active == "categories"(
+
+                    )}
                     {active !== "vital" && active !== "mytask" && (
                         <div className='w-[78%] p-3'>
                             <div className='flex mt-4 px-3 justify-between'>

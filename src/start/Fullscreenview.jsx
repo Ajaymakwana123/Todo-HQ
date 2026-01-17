@@ -5,7 +5,6 @@ import { RiEditBoxFill } from "react-icons/ri";
 import { IoInformation } from "react-icons/io5";
 import { FaInfo } from "react-icons/fa";
 
-
 function Fullscreenview({ selectedTask, setSelectedTask, onDelete }) {
     return (
         <div className='md:h-[62vh] lg:h-[65vh] sm:h-[60vh] h-[66vh] overflow-y-auto relative'>
