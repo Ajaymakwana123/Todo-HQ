@@ -95,7 +95,7 @@ function Dashboard() {
         { id: "dashboard", label: "Dashboard", icon: "/images/icd1.png" },
         { id: "vital", label: "Vital Task", icon: "/images/icd2.png" },
         { id: "mytask", label: "My Task", icon: "/images/icd3.png" },
-        { id: "categories", label: "Task Categories", icon: "/images/icd4.png" },
+        { id: "cates", label: "Task Categories", icon: "/images/icd4.png" },
         { id: "settings", label: "Settings", icon: "/images/icd5.png" },
         { id: "help", label: "Help", icon: "/images/icd6.png" },
     ];
@@ -152,7 +152,6 @@ function Dashboard() {
                             onDelete={handleDeleteTask}
                         />
                     )}
-
                     {active === "mytask" && (
                         <TaskMasterDetailView
                             title="My Tasks"
@@ -165,10 +164,19 @@ function Dashboard() {
                             onDelete={handleDeleteTask}
                         />
                     )}
-                    {active == "categories"(
-
+                    {active === "cates" && (
+                        <TaskMasterDetailView
+                            title="Task Categories"
+                            tasks={tasks}
+                            onEdit={(task) => {
+                                setSelectedTask(task);
+                                setIsEdit(true);
+                                setShowModal(true);
+                            }}
+                            onDelete={handleDeleteTask}
+                        />
                     )}
-                    {active !== "vital" && active !== "mytask" && (
+                    {active !== "vital" && active !== "mytask" && active !== "cates" && (
                         <div className='w-[78%] p-3'>
                             <div className='flex mt-4 px-3 justify-between'>
                                 <h1 className='text-[2.2vw] font-medium text-black'>Welcome Back, {userName} 👋</h1>
