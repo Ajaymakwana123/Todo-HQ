@@ -12,6 +12,8 @@ import DashboardLeft from './DashboardLeft';
 import Fullscreenview from './Fullscreenview';
 import VitalTaskView from './TaskMasterDetailView';
 import TaskMasterDetailView from './TaskMasterDetailView';
+import Category from './Category';
+import Setting from './Setting';
 
 
 function Dashboard() {
@@ -165,19 +167,14 @@ function Dashboard() {
                         />
                     )}
                     {active === "cates" && (
-                        <TaskMasterDetailView
-                            title="Task Categories"
-                            tasks={tasks}
-                            onEdit={(task) => {
-                                setSelectedTask(task);
-                                setIsEdit(true);
-                                setShowModal(true);
-                            }}
-                            onDelete={handleDeleteTask}
-                        />
+                        <Category />
                     )}
-                    {active !== "vital" && active !== "mytask" && active !== "cates" && (
-                        <div className='w-[78%] p-3'>
+                    {active === "settings" && (
+                        <Setting />
+                    )}
+
+                    {active !== "vital" && active !== "mytask" && active !== "cates" && active !== "settings" && (
+                        <div className='w-[78%] h-screen p-3'>
                             <div className='flex mt-4 px-3 justify-between'>
                                 <h1 className='text-[2.2vw] font-medium text-black'>Welcome Back, {userName} 👋</h1>
                                 <div className='flex border-[1.8px] py-1.5 px-4 items-center border-[#FF6767] rounded-lg cursor-pointer'>
@@ -186,7 +183,7 @@ function Dashboard() {
                                 </div>
                             </div>
                             {!selectedTask ? (
-                                <div className='border-[#a1a3ab9d] p-4 flex rounded mx-3 my-5 w-full h-[33vw] border-[1.8px]'>
+                                <div className='border-[#a1a3ab9d] p-4 flex rounded mx-3 my-4 w-full h-[33vw] border-[1.8px]'>
                                     <div className='w-[54%] border-[#a1a3ab9d] bg-[#F5F8FF] p-4 rounded-xl border-[1.8px] h-full flex flex-col'>
                                         <div className='flex justify-between'>
                                             <div className='flex items-center'>

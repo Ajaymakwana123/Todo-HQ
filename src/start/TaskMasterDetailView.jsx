@@ -16,7 +16,6 @@ const TaskMasterDetailView = ({
             </h1>
 
             <div className="flex gap-5 h-[75vh]">
-
                 {/* LEFT */}
                 <div className="w-[45%] bg-[#F5F8FF] border-[1.8px] rounded-xl p-4 overflow-y-auto">
                     {tasks.map((task, index) => (
