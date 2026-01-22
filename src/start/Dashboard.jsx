@@ -14,6 +14,7 @@ import VitalTaskView from './TaskMasterDetailView';
 import TaskMasterDetailView from './TaskMasterDetailView';
 import Category from './Category';
 import Setting from './Setting';
+import Helps from './Helps';
 
 
 function Dashboard() {
@@ -27,10 +28,6 @@ function Dashboard() {
     const [tasks, setTasks] = useState([]);
     const [selectedTask, setSelectedTask] = useState(null);
     const [isEdit, setIsEdit] = useState(false);
-
-    const vitalTasks = tasks.filter(
-        t => t.priority?.toLowerCase() === "extreme"
-    );
 
     const updateTask = (updatedTask) => {
         const updatedTasks = tasks.map(task =>
@@ -49,6 +46,8 @@ function Dashboard() {
     }, []);
 
     const [activeTask, setActiveTask] = useState(null);
+    const [searchTerm, setSearchTerm] = useState("");
+
 
     useEffect(() => {
         if (tasks?.length) {
@@ -73,10 +72,8 @@ function Dashboard() {
         setSelectedTask(null);
     };
 
-
     useEffect(() => {
         const user = auth.currentUser;
-
         if (user) {
             if (user.displayName) {
                 setUserName(user.displayName);
@@ -85,7 +82,6 @@ function Dashboard() {
             }
         }
     }, []);
-
 
     const today = new Date();
     const dayName = today.toLocaleDateString("en-US", {
@@ -113,6 +109,8 @@ function Dashboard() {
                             <input
                                 type="text"
                                 placeholder="Search your task here..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
                                 className="w-full h-12 pl-5 rounded-xl shadow-md outline-none text-[#A1A3AB] bg-[#fafbff] text-md ml-1 font-medium focus:outline-none"
                             />
                             <div className='bg-[#FF6767] absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 rounded-lg p-2.5'>
@@ -172,8 +170,10 @@ function Dashboard() {
                     {active === "settings" && (
                         <Setting />
                     )}
-
-                    {active !== "vital" && active !== "mytask" && active !== "cates" && active !== "settings" && (
+                    {active === "help" && (
+                        <Helps />
+                    )}
+                    {active === "dashboard" && (
                         <div className='w-[78%] h-screen p-3'>
                             <div className='flex mt-4 px-3 justify-between'>
                                 <h1 className='text-[2.2vw] font-medium text-black'>Welcome Back, {userName} 👋</h1>
@@ -202,58 +202,65 @@ function Dashboard() {
                                         </div>
 
                                         <div className="mt-4 flex flex-col gap-4 overflow-y-auto h-[54vh]">
-                                            {tasks.map((task, index) => (
-                                                <div
-                                                    key={index}
-                                                    onClick={() => setSelectedTask(task)}
-                                                    className="w-full flex flex-col p-2 border-[#A1A3AB] border-[2px] rounded-xl">
-                                                    <div className={`ml-1 rounded-full border-2 mt-1.5 ${task.priority === "Extreme"
-                                                        ? "border-[#F21E1E]"
-                                                        : task.priority === "Moderate"
-                                                            ? "border-[#42ADE2]"
-                                                            : "border-[#05A301]"
-                                                        } h-3 w-3`} />
+                                            {tasks
+                                                .filter((task) => {
+                                                    if (!searchTerm.trim()) return true; // search empty → all tasks
+                                                    return task.title
+                                                        .toLowerCase()
+                                                        .includes(searchTerm.toLowerCase());
+                                                })
+                                                .map((task, index) => (
+                                                    <div
+                                                        key={index}
+                                                        onClick={() => setSelectedTask(task)}
+                                                        className="w-full flex flex-col p-2 border-[#A1A3AB] border-[2px] rounded-xl">
+                                                        <div className={`ml-1 rounded-full border-2 mt-1.5 ${task.priority === "Extreme"
+                                                            ? "border-[#F21E1E]"
+                                                            : task.priority === "Moderate"
+                                                                ? "border-[#42ADE2]"
+                                                                : "border-[#05A301]"
+                                                            } h-3 w-3`} />
 
-                                                    <div className="flex flex-row gap-2 ml-7 -mt-4.5 justify-between">
-                                                        <div className='w-[80%] flex justify-between'>
-                                                            <div>
-                                                                <h1 className="font-semibold text-md">{task.title}</h1>
-                                                                <p className="text-sm mt-2 max-h-30 text-[#747474] w-[80%]">
-                                                                    {task.description}
-                                                                </p>
+                                                        <div className="flex flex-row gap-2 ml-7 -mt-4.5 justify-between">
+                                                            <div className='w-[80%] flex justify-between'>
+                                                                <div>
+                                                                    <h1 className="font-semibold text-md">{task.title}</h1>
+                                                                    <p className="text-sm mt-2 max-h-30 text-[#747474] w-[80%]">
+                                                                        {task.description}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <div className="w-[20%] flex me-2 flex-col items-end">
+                                                                <CiMenuKebab className="rotate-90" />
+                                                                {task.image && (
+                                                                    <img
+                                                                        src={task.image}
+                                                                        alt=""
+                                                                        className="rounded-sm w-20 h-20"
+                                                                    />
+                                                                )}
                                                             </div>
                                                         </div>
-                                                        <div className="w-[20%] flex me-2 flex-col items-end">
-                                                            <CiMenuKebab className="rotate-90" />
-                                                            {task.image && (
-                                                                <img
-                                                                    src={task.image}
-                                                                    alt=""
-                                                                    className="rounded-sm w-20 h-20"
-                                                                />
-                                                            )}
+                                                        <div className="flex justify-center gap-5 mt-2 text-[.9vw] w-full text-[#747474]">
+                                                            <p >
+                                                                Priority:{" "}
+                                                                <span
+                                                                    className={`font-medium ${task.priority === "Extreme"
+                                                                        ? "text-[#F21E1E]"
+                                                                        : task.priority === "Moderate"
+                                                                            ? "text-[#42ADE2]"
+                                                                            : "text-[#05A301]"
+                                                                        }`}
+                                                                >
+                                                                    {task.priority}
+                                                                </span>
+
+                                                            </p>
+                                                            <p>Status: Not Started</p>
+                                                            <p>Created on: {task.date}</p>
                                                         </div>
                                                     </div>
-                                                    <div className="flex justify-center gap-5 mt-2 text-[.9vw] w-full text-[#747474]">
-                                                        <p >
-                                                            Priority:{" "}
-                                                            <span
-                                                                className={`font-medium ${task.priority === "Extreme"
-                                                                    ? "text-[#F21E1E]"
-                                                                    : task.priority === "Moderate"
-                                                                        ? "text-[#42ADE2]"
-                                                                        : "text-[#05A301]"
-                                                                    }`}
-                                                            >
-                                                                {task.priority}
-                                                            </span>
-
-                                                        </p>
-                                                        <p>Status: Not Started</p>
-                                                        <p>Created on: {task.date}</p>
-                                                    </div>
-                                                </div>
-                                            ))}
+                                                ))}
                                         </div>
                                     </div>
 
